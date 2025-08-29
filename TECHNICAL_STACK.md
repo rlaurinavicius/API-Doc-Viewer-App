@@ -14,7 +14,8 @@ This document outlines the technical stack, tools, and development process for t
 ### Backend
 - **Runtime:** Node.js
 - **Framework:** Express.js
-- **Database:** SQLite (for initial development)
+*   **Database:** **SQLite** (file-based, for initial development).
+*   **ORM:** **Prisma** (for type-safe database interactions and migrations).
 - **Authentication:** Passport.js with `passport-google-oauth20`
 - **API Doc Parsing:** `js-yaml`
 

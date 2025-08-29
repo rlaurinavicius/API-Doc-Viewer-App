@@ -1,12 +1,22 @@
 
 import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
   const { projectName } = await request.json();
 
-  console.log("Project name from API:", projectName);
-
-  // For now, just return a success message.
-  // Later, we will add the database logic here.
-  return NextResponse.json({ message: "Project created successfully" }, { status: 201 });
+  try {
+    const project = await prisma.project.create({
+      data: {
+        name: projectName,
+      },
+    });
+    console.log("Project saved to DB:", project);
+    return NextResponse.json({ message: "Project created and saved to database", project }, { status: 201 });
+  } catch (error) {
+    console.error("Error saving project to DB:", error);
+    return NextResponse.json({ message: "Failed to create project" }, { status: 500 });
+  }
 }
