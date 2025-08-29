@@ -18,9 +18,26 @@ export function Header() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
 
-  const handleCreateProject = () => {
-    console.log("Creating project:", projectName);
-    setIsDialogOpen(false);
+  const handleCreateProject = async () => {
+    try {
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ projectName }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create project");
+      }
+
+      const result = await response.json();
+      console.log("Server response:", result);
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
   };
 
   return (
