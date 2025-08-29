@@ -1,4 +1,6 @@
 
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,13 +12,22 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
 
 export function Header() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [projectName, setProjectName] = useState("");
+
+  const handleCreateProject = () => {
+    console.log("Creating project:", projectName);
+    setIsDialogOpen(false);
+  };
+
   return (
     <header className="border-b">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold py-4">API Doc Viewer App</h1>
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>New Project</Button>
           </DialogTrigger>
@@ -32,11 +43,16 @@ export function Header() {
                 <Label htmlFor="name" className="text-right">
                   Project Name
                 </Label>
-                <Input id="name" className="col-span-3" />
+                <Input
+                  id="name"
+                  className="col-span-3"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                />
               </div>
             </div>
             <div className="flex justify-end">
-              <Button>Create</Button>
+              <Button onClick={handleCreateProject}>Create</Button>
             </div>
           </DialogContent>
         </Dialog>
