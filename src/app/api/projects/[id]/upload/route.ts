@@ -1,7 +1,7 @@
 
 import { NextResponse } from "next/server";
 import * as jsyaml from "js-yaml";
-import { prisma } from "../../../../../lib/prisma";
+import prisma from "../../../../../lib/prisma";
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
   const { id: projectId } = await params;
