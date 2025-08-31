@@ -4,7 +4,7 @@ import * as jsyaml from "js-yaml";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
-  const projectId = params.id;
+  const { id: projectId } = await params;
   const formData = await request.formData();
   const files = formData.getAll("files") as File[];
 
