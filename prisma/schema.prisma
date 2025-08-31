@@ -24,6 +24,7 @@ model Project {
 model ApiDocument {
   id          String        @id @default(uuid())
   name        String
+  fileType    String? // e.g., "yaml", "json"
   content     String
   projectId   String
   project     Project       @relation(fields: [projectId], references: [id])

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -13,6 +12,7 @@ interface ApiDocument {
   id: string;
   name: string;
   content: string;
+  fileType?: string; // Add fileType to the interface
 }
 
 export default function ApiDocumentDetailPage() {
@@ -41,9 +41,11 @@ export default function ApiDocumentDetailPage() {
         // Parse the content for SwaggerUI
         let parsedSpec: any;
         try {
-          if (data.apiDocument.name.endsWith(".yaml") || data.apiDocument.name.endsWith(".yml")) {
+          const docFileType = data.apiDocument.fileType || data.apiDocument.name.split(".").pop(); // Fallback to extension if fileType is null
+
+          if (docFileType === "yaml" || docFileType === "yml") {
             parsedSpec = jsyaml.load(data.apiDocument.content);
-          } else if (data.apiDocument.name.endsWith(".json")) {
+          } else if (docFileType === "json") {
             parsedSpec = JSON.parse(data.apiDocument.content);
           } else {
             throw new Error("Unsupported file format");
