@@ -14,11 +14,14 @@ export async function POST(request: Request, { params }: { params: { id: string 
     try {
       const fileContent = await file.text();
       let parsedContent: any;
+      let fileType: string | null = null;
 
       if (file.name.endsWith(".yaml") || file.name.endsWith(".yml")) {
         parsedContent = jsyaml.load(fileContent);
+        fileType = "yaml";
       } else if (file.name.endsWith(".json")) {
         parsedContent = JSON.parse(fileContent);
+        fileType = "json";
       } else {
         console.warn(`Skipping unsupported file type: ${file.name}`);
         continue;
@@ -29,6 +32,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
           name: file.name,
           content: fileContent,
           projectId: projectId,
+          fileType: fileType,
         },
       });
 
