@@ -7,24 +7,18 @@ if (!fs.existsSync(screenshotsDir)) {
   fs.mkdirSync(screenshotsDir);
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 (async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto('http://localhost:3000');
 
-  const button = await page.evaluateHandle(() => {
-    const buttons = Array.from(document.querySelectorAll('button'));
-    return buttons.find(button => button.textContent.includes('New Project'));
-  });
+  // Give the page some time to load
+  await sleep(3000);
 
-  if (button) {
-    await button.click();
-  } else {
-    throw new Error('Button not found');
-  }
-
-
-  await page.waitForSelector('div[role="dialog"]');
-  await page.screenshot({ path: 'screenshots/02-project-creation-dialog.png' });
+  await page.screenshot({ path: 'screenshots/03-sidebar-with-docs.png', fullPage: true });
   await browser.close();
 })();
