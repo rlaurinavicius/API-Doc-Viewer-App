@@ -10,6 +10,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
       where: {
         id: projectId,
       },
+      include: {
+        apiDocuments: true, // Include all API documents related to the project
+      },
     });
 
     if (!project) {

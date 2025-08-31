@@ -7,9 +7,15 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+interface ApiDocument {
+  id: string;
+  name: string;
+}
+
 interface Project {
   id: string;
   name: string;
+  apiDocuments?: ApiDocument[];
 }
 
 export default function ProjectDetailPage() {
@@ -72,6 +78,14 @@ export default function ProjectDetailPage() {
       console.log("Upload successful:", result);
       alert("Files uploaded successfully!");
       setSelectedFiles(null); // Clear selected files
+      // Re-fetch project to update the list of API documents
+      if (project) {
+        const updatedProjectResponse = await fetch(`/api/projects/${projectId}`);
+        if (updatedProjectResponse.ok) {
+          const updatedProjectData = await updatedProjectResponse.json();
+          setProject(updatedProjectData.project);
+        }
+      }
     } catch (err: any) {
       console.error("Error uploading files:", err);
       alert(`Error uploading files: ${err.message}`);
@@ -110,6 +124,26 @@ export default function ProjectDetailPage() {
           </Button>
         </CardFooter>
       </Card>
+
+      {project.apiDocuments && project.apiDocuments.length > 0 && (
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle>Uploaded API Documents</CardTitle>
+            <CardDescription>Click on a document to view its details.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul>
+              {project.apiDocuments.map((doc) => (
+                <li key={doc.id} className="py-2 border-b last:border-b-0">
+                  <a href={`/projects/${project.id}/docs/${doc.id}`} className="text-blue-600 hover:underline">
+                    {doc.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

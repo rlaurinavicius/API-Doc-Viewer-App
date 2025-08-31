@@ -4,7 +4,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const projects = await prisma.project.findMany();
+    const projects = await prisma.project.findMany({
+      include: {
+        apiDocuments: true,
+      },
+    });
     return NextResponse.json({ projects }, { status: 200 });
   } catch (error) {
     console.error("Error fetching projects:", error);
