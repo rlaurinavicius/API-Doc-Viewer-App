@@ -31,6 +31,27 @@ export async function POST(request: Request, { params }: { params: { id: string 
           projectId: projectId,
         },
       });
+
+      // Extract and save API endpoints
+      if (parsedContent && parsedContent.paths) {
+        for (const path in parsedContent.paths) {
+          if (parsedContent.paths.hasOwnProperty(path)) {
+            const methods = parsedContent.paths[path];
+            for (const method in methods) {
+              if (methods.hasOwnProperty(method)) {
+                await prisma.apiEndpoint.create({
+                  data: {
+                    path: path,
+                    method: method.toLowerCase(),
+                    apiDocumentId: apiDocument.id,
+                  },
+                });
+              }
+            }
+          }
+        }
+      }
+
       uploadedDocuments.push(apiDocument);
     } catch (error) {
       console.error(`Error processing file ${file.name}:`, error);

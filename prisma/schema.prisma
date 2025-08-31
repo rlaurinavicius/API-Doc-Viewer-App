@@ -22,13 +22,26 @@ model Project {
 }
 
 model ApiDocument {
-  id        String   @id @default(uuid())
-  name      String
-  content   String
-  projectId String
-  project   Project  @relation(fields: [projectId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String        @id @default(uuid())
+  name        String
+  content     String
+  projectId   String
+  project     Project       @relation(fields: [projectId], references: [id])
+  apiEndpoints ApiEndpoint[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@unique([name, projectId]) // Ensure unique name within a project
+}
+
+model ApiEndpoint {
+  id            String     @id @default(uuid())
+  path          String
+  method        String
+  apiDocumentId String
+  apiDocument   ApiDocument @relation(fields: [apiDocumentId], references: [id])
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@unique([path, method, apiDocumentId]) // Ensure unique endpoint within a document
 }

@@ -5,9 +5,22 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+interface ApiEndpoint {
+  id: string;
+  path: string;
+  method: string;
+}
+
+interface ApiDocument {
+  id: string;
+  name: string;
+  apiEndpoints?: ApiEndpoint[];
+}
+
 interface Project {
   id: string;
   name: string;
+  apiDocuments?: ApiDocument[];
 }
 
 export function Sidebar() {
@@ -39,13 +52,43 @@ export function Sidebar() {
             <p className="text-sm text-gray-500">No projects yet.</p>
           ) : (
             projects.map((project) => (
-              <Link
-                key={project.id}
-                href={`/projects/${project.id}`}
-                className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200"
-              >
-                {project.name}
-              </Link>
+              <div key={project.id}>
+                <Link
+                  href={`/projects/${project.id}`}
+                  className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200"
+                >
+                  {project.name}
+                </Link>
+                {project.apiDocuments && project.apiDocuments.length > 0 && (
+                  <ul className="ml-4 mt-1 space-y-1">
+                    {project.apiDocuments.map((doc) => (
+                      <li key={doc.id}>
+                        <Link
+                          href={`/projects/${project.id}/docs/${doc.id}`}
+                          className="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-200"
+                        >
+                          {doc.name}
+                        </Link>
+                        {doc.apiEndpoints && doc.apiEndpoints.length > 0 && (
+                          <ul className="ml-4 mt-1 space-y-1">
+                            {doc.apiEndpoints.map((endpoint) => (
+                              <li key={endpoint.id}>
+                                <Link
+                                  href={`/projects/${project.id}/docs/${doc.id}?endpoint=${endpoint.id}`}
+                                  className="block px-3 py-2 rounded-md text-xs text-gray-500 hover:bg-gray-200"
+                                >
+                                  <span className="uppercase font-bold mr-1">{endpoint.method}</span>
+                                  {endpoint.path}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             ))
           )}
         </nav>
