@@ -6,7 +6,11 @@ export async function GET() {
   try {
     const projects = await prisma.project.findMany({
       include: {
-        apiDocuments: true,
+        apiDocuments: {
+          include: {
+            apiEndpoints: true,
+          },
+        },
       },
     });
     return NextResponse.json({ projects }, { status: 200 });

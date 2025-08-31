@@ -5,9 +5,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+interface ApiEndpoint {
+  id: string;
+  path: string;
+  method: string;
+}
+
 interface ApiDocument {
   id: string;
   name: string;
+  apiEndpoints?: ApiEndpoint[];
 }
 
 interface Project {
@@ -62,6 +69,21 @@ export function Sidebar() {
                         >
                           {doc.name}
                         </Link>
+                        {doc.apiEndpoints && doc.apiEndpoints.length > 0 && (
+                          <ul className="ml-4 mt-1 space-y-1">
+                            {doc.apiEndpoints.map((endpoint) => (
+                              <li key={endpoint.id}>
+                                <Link
+                                  href={`/projects/${project.id}/docs/${doc.id}?endpoint=${endpoint.id}`}
+                                  className="block px-3 py-2 rounded-md text-xs text-gray-500 hover:bg-gray-200"
+                                >
+                                  <span className="uppercase font-bold mr-1">{endpoint.method}</span>
+                                  {endpoint.path}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </li>
                     ))}
                   </ul>
