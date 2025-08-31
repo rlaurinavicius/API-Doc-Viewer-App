@@ -12,7 +12,7 @@ interface ApiDocument {
 
 export default function ApiDocumentDetailPage() {
   const params = useParams();
-  const projectId = params.projectId as string;
+  const projectId = params.id as string;
   const docId = params.docId as string;
   const [apiDocument, setApiDocument] = useState<ApiDocument | null>(null);
   const [loading, setLoading] = useState(true);
