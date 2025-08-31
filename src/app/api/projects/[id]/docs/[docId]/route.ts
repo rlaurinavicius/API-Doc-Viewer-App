@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request: Request, { params }: { params: { projectId: string; docId: string } }) {
-  const { id: projectId, docId } = params;
+  const { id: projectId, docId } = await params;
 
   try {
     const apiDocument = await prisma.apiDocument.findUnique({
